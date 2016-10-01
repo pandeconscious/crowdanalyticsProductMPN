@@ -1,0 +1,43 @@
+*5000 clusters, with 2000 features seems to be doing a good job (running time around 1 hr) , 
+the only problem that may occur sometimes is that clusters sometimes may be formed on the basis
+of words that are not talking about the brand, e.g. "Metal Wall Hanging" is common among a cluster
+instead of the exact brand
+
+*But it seems mpns are more correlated to product types than brands
+
+*Sometimes the mpn exists as conjugation with something else, e.g id 12 in train:
+12,(Ship from USA) 3 Piece Bar Table Set in Gloss White with 2 Bar Stools by Coaster 100167-120356 /ITEM NO#8Y-IFW81854151906,(Ship from USA) 3 Piece Bar Table Set in Gloss White with 2 Bar Stools by Coaster 100167-120356 /ITEM NO#8Y-IFW81854151906,100167
+
+*Sometimes, extra character on left or right, e.g in id 41 in train:
+41,"Artists' Watercolor Paint Tube Capacity: Half, Color: Raw Umber","0101554 Capacity: Half, Color: Raw Umber Features: -Made individually to the highest standards. -Also great for traveling and sketching works. -Watercolor paint tube. -Maximum color strength offers greater tinting possibilities. -Tubes are more popular for those who use high volumes of color or stronger washes of color. -Pans are often used by beginners because they can be less inhibiting and easier to control the strength of color. Product Type: -Paint. Dimensions: Capacity Half - Overall Height - Top to Bottom: -0.59"". Capacity Half - Overall Width - Side to Side: -0.63"". Capacity Half - Overall Depth - Front to Back: -0.71"". Capacity Half - Overall Product Weight: -0.01 lbs. Capacity Large - Overall Height - Top to Bottom: -4.92"". Capacity Large - Overall Width - Side to Side: -3.15"". Capacity Large - Overall Depth - Front to Back: -0.91"".",101554
+That extra character could just be comma or # as well:
+53,"Robot Coupe 102391, (D) Magnetic Switch R6Vn Serie",(D) Magnetic Switch R6Vn Serie.,102391
+54,"Precious Moments, Baby Gifts, ""Jesus Loves Me"", Snow Globe, Resin, Girl, #102403","A little girl shares a tender moment with a gentle lamb to illustrate Jesus' unfailing love. Featuring sweet pink checks and butterflies, this snow globe plays the tune “Jesus Loves Me”. With timeless appeal, it is sure to become a favorite keepsake to be passed down through generations. It adds a precious touch to any nursery. Give this baby gift as a baby shower present, to welcome a new baby girl home, baptism gift, or for one of her first birthdays. Crafted of cold-cast resin and glass and carefully hand painted. Approximately 5.5 inches high.",102403
+
+*surrounding parentheses very common 
+*following comma very common
+
+*some characters are not present in any of the training set mpns e.g. , ;  - such characters need to be trimmed from potential mpns in test
+
+*total 70 distinct chars present but at first position only 58 out of those characters are present
+
+* 929 mnps in train have english words of len more than 3 in them as substring
+    but only 11 mpns are them selves entirely english words (these 11 are noise)
+    the other 929 have english embedded inside them
+    
+    so if a word in title or description is entirely english then we shoudldn't consider such words
+    as potential mpns
+
+* 1419 train points contain space in mpn
+
+* 8435 rows out of 53957 rows in train couldn't find mpn as simply contained in 
+either title or description - that is 15%
+
+
+* 1497 rows out of 53957 rows in train couldn't find mpn as substring-wise contained in 
+either title or description - that is 2.7%
+
+
+
+
+
