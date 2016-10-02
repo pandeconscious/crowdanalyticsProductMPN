@@ -7,8 +7,10 @@ Created on 01-Oct-2016
 import pandas as pd
 import numpy as np
 from nltk.corpus import words
+from nltk.corpus import gutenberg
 from BeautifulSoup import BeautifulSoup
 import mpnSimilarity
+import re
 
 mpnTypeChars = set(['0', '1', '2', '3', '4', '5', '6', 
                    '7', '8', '9', '-', '/', '.', '+', 
@@ -17,7 +19,11 @@ mpnTypeChars = set(['0', '1', '2', '3', '4', '5', '6',
 unwantedLeftChars = "-/.+_()#='&`*,:\\%$@!~^{}[]|?<>;"
 unwantedRightChars = "-/.+_(#'&`*,:\\%$@!~^{}[]|?<>;"
 
-impossibleMPNChars = "*`\\%$@!~^{}[]|?<>;"
+impossibleMPNChars = "*`\\%$@!~^{}[]|?<>,;"
+
+patternSize = re.compile("^[0-9]+\-[1-9]/[1-9]$")
+
+patternUnit = re.compile("^[0-9]{1,2}\s*[a-zA-Z]{2}$")
 
 def containsAny(seq, aset):
     """ Check whether sequence seq contains ANY of the items in aset. """
@@ -54,6 +60,21 @@ def get_all_substrings(input_string):
     return [input_string[i:j+1] for i in xrange(length) for j in xrange(i,length)]
 
 def filterFunc(s):
+    if s.strip() == "":
+        return False
+    
+    if len(s) == 1:
+        return False
+    
+    if '"' in s:
+        return False
+    
+    if patternSize.match(s):
+        return False
+    
+    if patternUnit.match(s):
+        return False
+    
     if containsAny(s, impossibleMPNChars):
         return False
     
@@ -71,12 +92,31 @@ def filterFunc(s):
         if len(s) < 5 and len(s) < 12:
             return False
     
+    #single hyphen, dot, slash english words filtering
+    countHyphen = s.count('-')
+    if countHyphen == 1:
+        left, right = s.split('-')
+        if (left.lower() in d or left.lower() in dgtn) and (right.lower() in d or right.lower() in dgtn):
+            return False
+    
+    countDot = s.count('.')
+    if countDot == 1:
+        left, right = s.split('.')
+        if (left.lower() in d or left.lower() in dgtn) and (right.lower() in d or right.lower() in dgtn):
+            return False
+    
+    countSlash = s.count('/')
+    if countSlash == 1:
+        left, right = s.split('/')
+        if (left.lower() in d or left.lower() in dgtn) and (right.lower() in d or right.lower() in dgtn):
+            return False
+    
     if hasMPNtypeSpecChar(s):
         return True
     
     all_susbtr = get_all_substrings(s)
     for sub in all_susbtr:
-        if len(sub) > 2 and sub in d:
+        if len(sub) > 2 and (sub in d or sub in dgtn):
             return False
     
     return True
@@ -93,6 +133,7 @@ train_data_mpn_predicted = pd.Series(np.chararray(numRows, itemsize = 200)).asty
  
 
 d = set(words.words())
+dgtn = set(gutenberg.words())
 
 countMPNfound = 0
 

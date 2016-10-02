@@ -74,7 +74,7 @@ for k in range(K):
         candidateWordsTemp.extend(train_row_wise_filtered_content[rowVal])
         
         #candidateWords = getMostProbSusbtrs(candidateWordsTemp)
-        candidateWords = candidateWordsTemp
+        candidateWords = filter(lambda x : x is not "", candidateWordsTemp)
         
         mostProbMPN = mpnSimilarity.mostProbableMPN(candidateWords, clusterMpns)
         
@@ -93,7 +93,7 @@ for k in range(K):
             print "actual mpn: ", valid_data_mpn_true[rowToSet[0]]
             print "predicted mpn: ",  mostProbMPN
         
-        print "accuracy so far: ", (matched*100)/counter
+        print "accuracy so far: ", float(matched*100)/float(counter)
         
         print "==============================================================="
         #print '\n'

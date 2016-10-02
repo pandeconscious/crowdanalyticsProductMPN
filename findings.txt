@@ -49,4 +49,12 @@ but not right and vice versa
 
 * all float mpns also in length 6 to 11
 
+* out of 14k single hyphen mpns only 26 have english on both sides
+
+*size pattern found  1  times in mpns
+ size pattern found  1188  times in description
+ 
+*pattern unit found  33  times in mpns
+pattern unit found  2890  times in description
+
 
