@@ -16,15 +16,16 @@ import pickle
 
 K = 5000 #clusters
 
-train_data = pd.read_csv('../data/CAX_Train.csv')
+#train_data = pd.read_csv('../data/CAX_Train.csv')
+train_data = pd.read_csv('../data/CAX_Train_Test_Combined.csv')
 
 train_data_title = train_data['title'].astype(str)
 
-train_data_mpn = train_data['mpn_qs'].astype(str)
+#train_data_mpn = train_data['mpn_qs'].astype(str)
 
 print len(train_data_title)
 
-vectorizer = TfidfVectorizer(max_df=0.3,min_df=2, stop_words='english', max_features=5000, lowercase=True)
+vectorizer = TfidfVectorizer(max_df=0.3,min_df=2, stop_words='english', max_features=10000, lowercase=True)
 
 X = vectorizer.fit_transform(train_data_title)
 
@@ -34,10 +35,10 @@ km = KMeans(n_clusters=K, init='k-means++', max_iter=50, n_init=3, n_jobs = -1, 
 
 km.fit(X)
 
-with open('../pickles/train_title_X_vectors.pickle', 'wb') as f:
+with open('../pickles/train_test_comb_title_X_vectors.pickle', 'wb') as f:
     pickle.dump(X, f)
 
-with open('../pickles/train_title_kmeans.pickle', 'wb') as f:
+with open('../pickles/train_test_comb_kmeans.pickle', 'wb') as f:
     pickle.dump(km, f)
 
 
@@ -48,13 +49,15 @@ clusterMaps = {k: [] for k in range(K)} #contains rows for each cluster
 for row in range(len(clusterAssignments)):
     clusterMaps[clusterAssignments[row]].append(row)
 
+with open('../pickles/cluster_maps_k_5000_test_train_comb.pickle', 'wb') as fi1:
+    pickle.dump(clusterMaps, fi1)
 
-f = open('../aux_data/clustered_train_titles.txt','w')
+f = open('../aux_data/clustered_train_test_comb_titles.txt','w')
 
 for k, v in clusterMaps.iteritems():
     f.write('==================== k = ' + str(k) +'=======================\n')
     for r in v:
-        f.write(train_data_title[r] + ' ==> ' + train_data_mpn[r] + '\n')
+        f.write(train_data_title[r] + '\n')
     f.write('\n')
     f.write('\n')
     f.write('\n')

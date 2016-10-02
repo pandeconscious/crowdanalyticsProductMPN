@@ -89,7 +89,7 @@ def filterFunc(s):
         return False;
     
     if mpnSimilarity.RepresentsInt(s) or mpnSimilarity.RepresentsFloat(s):
-        if len(s) < 5 and len(s) < 12:
+        if len(s) <= 5 or len(s) >= 12:
             return False
     
     #single hyphen, dot, slash english words filtering
@@ -121,25 +121,28 @@ def filterFunc(s):
     
     return True
 
-train_data = pd.read_csv('../data/CAX_Train.csv', dtype={'mpn_qs': object})
+#train_data = pd.read_csv('../data/CAX_Train.csv', dtype={'mpn_qs': object})
+train_data = pd.read_csv('../data/CAX_Train_Test_Combined.csv', dtype={'mpn_qs': object})
 
 train_data_title =  train_data['title'].astype(str)
 train_data_desc =  train_data['product_description'].astype(str)
-train_data_mpn_true =  train_data['mpn_qs'].astype(str)
 
-numRows = len(train_data_mpn_true)
+#train_data_mpn_true =  train_data['mpn_qs'].astype(str)
 
-train_data_mpn_predicted = pd.Series(np.chararray(numRows, itemsize = 200)).astype(str)
+#numRows = len(train_data_mpn_true)
+numRows = len(train_data)
+
+#train_data_mpn_predicted = pd.Series(np.chararray(numRows, itemsize = 200)).astype(str)
  
 
 d = set(words.words())
 dgtn = set(gutenberg.words())
 
-countMPNfound = 0
+#countMPNfound = 0
 
 filteredContentTitleDescr = []
 
-f = open('../aux_data/train_row_wise_filtered_content.txt','w')
+f = open('../aux_data/train_test_comb_row_wise_filtered_content.txt','w')
 
 for row in range(numRows):
     possible_mpns = []
@@ -170,7 +173,7 @@ for row in range(numRows):
     print curr_desc_filtered
     """
     
-    
+    """
     tocontinue = False
     
     for tc in curr_title_filtered:
@@ -186,7 +189,7 @@ for row in range(numRows):
         if train_data_mpn_true[row] in dc:
             countMPNfound += 1
             break 
-    
+    """
     
     """
     title_union_desc = set(curr_title_filtered) | set(curr_desc_filtered)
@@ -200,9 +203,9 @@ for row in range(numRows):
     """
     
 import pickle
-with open('../pickles/train_row_wise_filtered_content.pickle', 'wb') as f2:
+with open('../pickles/train_test_comb_row_wise_filtered_content.pickle', 'wb') as f2:
     pickle.dump(filteredContentTitleDescr, f2)
     
     
-print str(countMPNfound) + " out of " + str(numRows) 
-print ((train_data_mpn_predicted == train_data_mpn_true).sum())
+#print str(countMPNfound) + " out of " + str(numRows) 
+#print ((train_data_mpn_predicted == train_data_mpn_true).sum())
