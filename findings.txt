@@ -37,7 +37,16 @@ either title or description - that is 15%
 * 1497 rows out of 53957 rows in train couldn't find mpn as substring-wise contained in 
 either title or description - that is 2.7%
 
+* 52267 out of 53957 mpns can be found by preprocessign with filtering mechanism of removing certain
+    words from the title and description contents
+    
+* only  435 of 53957 are amde of only alphabets - that is less then 1%
 
+* in an mpn left parentheses coccurs with right parentheses - so filter out those that have left
+but not right and vice versa
 
+* all int mpns in length 6 to 11
+
+* all float mpns also in length 6 to 11
 
 

@@ -12,7 +12,7 @@ def get_all_substrings(input_string):
     length = len(input_string)
     return [input_string[i:j+1] for i in xrange(length) for j in xrange(i,length)]
 
-def noEngish(s):
+def filterFunc(s):
     all_susbtr = get_all_substrings(s)
     for sub in all_susbtr:
         if len(sub) > 2 and sub in d:
@@ -42,7 +42,7 @@ for row in range(numRows):
     curr_title_split = curr_title.split()
     
     for s in curr_title_split:
-        if noEngish(s.lower()):
+        if filterFunc(s.lower()):
             possible_mpns.append(s)
         
     
@@ -50,7 +50,7 @@ for row in range(numRows):
     curr_desc_split = curr_desc.split()
     
     for s in curr_desc_split:
-         if noEngish(s.lower()):
+        if filterFunc(s.lower()):
             possible_mpns.append(s)
     
     #randomly select one mpn

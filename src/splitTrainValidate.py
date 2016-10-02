@@ -7,7 +7,6 @@ Created on 30-Sep-2016
 import pickle
 import pandas as pd
 import numpy as np
-from numpy import dtype
 
 
 K = 5000 #clusters
