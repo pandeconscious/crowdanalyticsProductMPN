@@ -77,6 +77,7 @@ for k in range(K):
         candidateWords = filter(lambda x : x is not "", candidateWordsTemp)
         
         mostProbMPN = mpnSimilarity.mostProbableMPN(candidateWords, clusterMpns)
+        #mostProbMPN = mpnSimilarity.mostProbableMPNAlignBased(candidateWords, clusterMpns)
         
         idd = rowVal+1
         rowToSet = valid_data[valid_data['id'] == idd].index.tolist()
@@ -88,10 +89,10 @@ for k in range(K):
         if mostProbMPN == valid_data_mpn_true[rowToSet[0]]:
             matched += 1
         else:
-            print "cluster mpns: ", clusterMpns
-            print "candidate words: ", candidateWords
-            print "actual mpn: ", valid_data_mpn_true[rowToSet[0]]
-            print "predicted mpn: ",  mostProbMPN
+            print "cluster mpns: ", map(lambda x : x.encode('ascii', 'ignore'), clusterMpns)
+            print "candidate words: ",  map(lambda x : x.encode('ascii', 'ignore'), candidateWords)
+            print "actual mpn: ",  valid_data_mpn_true[rowToSet[0]].encode('ascii', 'ignore')
+            print "predicted mpn: ",  mostProbMPN.encode('ascii', 'ignore')
         
         print "accuracy so far: ", float(matched*100)/float(counter)
         

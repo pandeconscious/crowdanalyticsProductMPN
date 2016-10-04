@@ -25,6 +25,9 @@ singleHyphenCountBothSidesEngish = 0
 singleDotCountBothSidesEngish = 0
 singleSlashCountBothSidesEngish = 0
 
+doubleHyphenCountAllSidesEngish = 0
+tripleHyphenCountAllSidesEngish = 0
+
 d = set(words.words())
 dgtn = set(gutenberg.words())
 
@@ -53,6 +56,16 @@ for mpn in train_data_mpn:
         left, right = mpn.split('/')
         if (left.lower() in d or left.lower() in dgtn) and (right.lower() in d or right.lower() in dgtn):
             singleSlashCountBothSidesEngish += 1
+            
+    if countHyphen == 2:
+        left, mid, right = mpn.split('-')
+        if (left.lower() in d or left.lower() in dgtn) and (mid.lower() in d or mid.lower() in dgtn) and (right.lower() in d or right.lower() in dgtn):
+            doubleHyphenCountAllSidesEngish += 1
+    
+    if countHyphen == 3:
+        left, mid1,  mid2, right = mpn.split('-')
+        if (left.lower() in d or left.lower() in dgtn) and (mid1.lower() in d or mid1.lower() in dgtn) and (mid2.lower() in d or mid2.lower() in dgtn) and (right.lower() in d or right.lower() in dgtn):
+            tripleHyphenCountAllSidesEngish += 1  
        
     oldVal = dotCountDistr.get(countDot) 
     if oldVal == None:
@@ -92,3 +105,5 @@ print "dot-slash: ", countDotSlashBoth
 print "num of single hyphen mpns with both sides english: ", singleHyphenCountBothSidesEngish
 print "num of single dot mpns with both sides english: ", singleDotCountBothSidesEngish
 print "num of single slash mpns with both sides english: ", singleSlashCountBothSidesEngish
+print "num of double hyphen mpns with all sides english: ", doubleHyphenCountAllSidesEngish
+print "num of triple hyphen mpns with all sides english: ", tripleHyphenCountAllSidesEngish

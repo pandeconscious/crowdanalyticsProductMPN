@@ -40,7 +40,7 @@ either title or description - that is 2.7%
 * 52267 out of 53957 mpns can be found by preprocessign with filtering mechanism of removing certain
     words from the title and description contents
     
-* only  435 of 53957 are amde of only alphabets - that is less then 1%
+* only  435 of 53957 are made of only alphabets - that is less then 1%
 
 * in an mpn left parentheses coccurs with right parentheses - so filter out those that have left
 but not right and vice versa
@@ -56,5 +56,38 @@ but not right and vice versa
  
 *pattern unit found  33  times in mpns
 pattern unit found  2890  times in description
+
+
+*num of special char distributions in mpns
+
+===============hyphen================
+0 30455
+1 14105
+2 5757
+3 2891
+4 582
+5 125
+6 28
+7 14
+
+===============dot================
+0 53095
+1 542
+2 225
+3 41
+4 52
+5 2
+
+===============slash================
+0 52263
+1 1616
+2 57
+3 13
+4 7
+8 1
+
+Space containing data:
+*title contains Chicago Hardware - mpn is 5 digits followed by 1 digit
+
 
 

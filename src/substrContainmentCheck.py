@@ -5,6 +5,7 @@ Created on 30-Sep-2016
 '''
 
 import pandas as pd
+from collections import defaultdict
 
 train_data = pd.read_csv('../data/CAX_Train.csv', dtype={'mpn_qs': object})
 
@@ -22,7 +23,9 @@ misMatchCount = 0
 #distr to store the counts for 
 #(substr startind distance from left, susbtr endind distance from right)
 
-jointDistr = {} 
+jointDistr = {}
+
+jointDistrRows = defaultdict(list) 
 
 
 for i in range(numRows):
@@ -46,6 +49,8 @@ for i in range(numRows):
                 jointDistr[(distLeft, distRight)] = 1
             else:
                 jointDistr[(distLeft, distRight)] = oldVal+1
+                
+            jointDistrRows[(distLeft, distRight)].append(i)
             
             
             break
@@ -67,6 +72,8 @@ for i in range(numRows):
                 else:
                     jointDistr[(distLeft, distRight)] = oldVal+1
                 
+                jointDistrRows[(distLeft, distRight)].append(i)
+                
                 break
         
     
@@ -86,5 +93,9 @@ f3 = open('../aux_data/train_jointDistr_lef_right_distances_mpn_susbtr.txt','w')
 
 for k, v in jointDistr.iteritems():
     f3.write("\n" + str(k) + " ==> " + str(v))
+    
+f4 = open('../aux_data/train_joint_left_right_rows_list_substr_based.txt','w')
+for k, v in jointDistrRows.iteritems():
+    f4.write("\n" + str(k) + " ==> " + str(v))
 
     

@@ -5,6 +5,9 @@ Created on 01-Oct-2016
 '''
 
 import operator
+from alignment.sequence import Sequence
+from alignment.vocabulary import Vocabulary
+from alignment.sequencealigner import SimpleScoring, GlobalSequenceAligner
 
 def RepresentsInt(s):
     try: 
@@ -64,6 +67,11 @@ def scoreMPN(candidateWord, clusterMpns):
     candContainsColon = ':' in candidateWord
     candContainsApersand = '&' in candidateWord
     
+    countCandHyphen = candidateWord.count('-')
+    countCandSlash = candidateWord.count('/')
+    countCandDot = candidateWord.count('.')
+    
+    candContainEplus = "E+" in candidateWord
     
     for clustMPN in clusterMpns:
         
@@ -139,24 +147,48 @@ def scoreMPN(candidateWord, clusterMpns):
         clustMPNContainsQuote = "'" in clustMPN
         clustMPNContainsColon = ':' in clustMPN
         clustMPNContainsApersand = '&' in clustMPN
+        clustMPNContainEplus = "E+" in clustMPN
+        
+        if clustMPNContainEplus == True and candContainEplus == True:
+            score += 2
         
         if clustMPNContainsHyphen == True and candContainsHyphen == True:
             score += 2
+            """
+            countHyphenClustMPN = clustMPN.count('-')
+            if countCandHyphen == countHyphenClustMPN:
+                score += 2
+            """
         
         if clustMPNContainsSlash == True and candContainsSlash == True:
             score += 1
+            #score += 2
+            """
+            countSlashClustMPN = clustMPN.count('/')
+            if countCandSlash == countSlashClustMPN:
+                score += 2
+            """
             
         if clustMPNConstainsDot == True and candConstainsDot == True:
             score += 0.8
+            #score += 2
+            """
+            countDotClustMPN = clustMPN.count('.')
+            if countCandDot == countDotClustMPN:
+                score += 2
+            """
         
         if clustMPNContainsPlus == True and candContainsPlus == True:
             score += 0.6
+            #score += 2
         
         if clustMPNContainsUnderScore == True and candContainsUnderScore == True:
             score += 0.5
+            #score += 2
         
         if clustMPNConstainsLeftParen == True and candConstainsLeftParen == True and clustMPNContainsRightParen == True and candContainsRightParen == True:
             score += 0.5
+            #score += 2
         
         if clustMPNContainsHash == True and candContainsHash == True:
             score += 0.4
@@ -193,6 +225,33 @@ def mostProbableMPN(candidateWords, clusterMpns):
     
     return sortedByScores[-1][0]
 
+def mostProbableMPNAlignBased(candidateWords, clusterMpns):
+    if candidateWords is None or clusterMpns is None:
+        return ""
+        
+    if len(candidateWords) == 0 or len(clusterMpns) == 0:
+        return ""
+        
+    rankedCands = {}
+    for cand in candidateWords:
+        candSeq = Sequence(list(cand))
+        candScore = 0
+            
+        for clustMPN in clusterMpns:
+            mpnSeq = Sequence(list(clustMPN))    
+            v = Vocabulary()
+            candSeqEncoded = v.encodeSequence(candSeq)
+            clustMPNEncoded = v.encodeSequence(mpnSeq)
+            scoring = SimpleScoring(2, -1)
+            aligner = GlobalSequenceAligner(scoring, -2)
+            score, encodeds = aligner.align(candSeqEncoded, clustMPNEncoded, backtrace=True)
+            candScore += score
+            
+        rankedCands[cand] = candScore
+        
+    sortedByScores = sorted(rankedCands.items(), key=operator.itemgetter(1))
+    return sortedByScores[-1][0]
+        
 
 if __name__ == '__main__':
     candidateWords = [u'der-mounted', u'MHSN6636A01', '1b-cd-89']
